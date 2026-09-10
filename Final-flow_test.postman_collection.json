@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "3ebf28be-0d35-44cd-934e-0feadef8b494",
+		"name": "Final-flow_test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "57933494",
+		"_collection_link": "https://soundarajanannadura-4957089.postman.co/workspace/Soundarajan-A's-Workspace~0faf5a54-1f8e-4e1c-899f-766d279ae68a/collection/57933494-3ebf28be-0d35-44cd-934e-0feadef8b494?action=share&source=collection_link&creator=57933494"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"let a=pm.response.json();",
+							"",
+							"pm.environment.set(\"flow_id\",a.id);",
+							"",
+							"console.log(\"After post\");"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"codingmart\",\n  \"password\": \"finest@123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}",
+					"host": [
+						"{{api}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var datas = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"ID exists\", function () {",
+							"    pm.expect(datas).to.have.property(\"id\");",
+							"});",
+							"",
+							"pm.test(\"Returned ID matches created ID\", function () {",
+							"    pm.expect(String(datas.id))",
+							"        .to.eql(String(pm.environment.get(\"flow_id\")));",
+							"});",
+							"",
+							"console.log(\"After get\");"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/{{flow_id}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"{{flow_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = pm.response.json();",
+							"",
+							"pm.test(\"Update was successful\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+							"});",
+							"",
+							"pm.test(\"Name was updated\", function () {",
+							"    pm.expect(data.username).to.eql(\"Finestcoder\");",
+							"});",
+							"",
+							"console.log(\"After update\");"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"Finestcoder\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/{{flow_id}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"{{flow_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete was successful\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+							"});",
+							"",
+							"console.log(\"After delete\");"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/{{flow_id}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"{{flow_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user after delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Deleted user should not exist\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"console.log(\"After delete operation , get\");",
+							"console.log(pm.response.status,pm.response.code);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/{{flow_id}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"{{flow_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
