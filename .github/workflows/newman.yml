@@ -23,8 +23,15 @@ jobs:
 
       - name: Run Newman tests
         run: |
-          newman run Final-flow_test.postman_collection.json \
+         newman run Final-flow_test.postman_collection.json \
             -e Practice.postman_environment.json \
             --env-var "api=https://6a9e43f32f89be7fb70dcade.mockapi.io/practice" \
             -r junit \
             --reporter-junitfull-export newman-report.xml
+
+      - name: Upload Newman report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-junit-report
+          path: newman-report.xml
