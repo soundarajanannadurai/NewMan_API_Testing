@@ -1,0 +1,30 @@
+name: Newman API Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-junitfull
+
+      - name: Run Newman tests
+        run: |
+          newman run Final-flow_test.postman_collection.json \
+            -e Practice.postman_environment.json \
+            --env-var "api=https://6a9e43f32f89be7fb70dcade.mockapi.io/practice" \
+            -r junit \
+            --reporter-junitfull-export newman-report.xml
